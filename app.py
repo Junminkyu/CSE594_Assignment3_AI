@@ -14,6 +14,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY")
 
+# Setup for the environment
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 COMMENTS_PATH = os.path.join(BASE_DIR, "data", "sarcasm.json")
 DATABASE_URL = os.environ.get("DATABASE_URL")
@@ -42,7 +43,7 @@ AI_RESPONSE_FORMAT = {
     },
 }
 
-# Checking Question
+# Setup for Attention Check Question
 CHECK_OPTIONS = [
     {"value": "channel_name", "label": "/iphone"},
     {
@@ -105,7 +106,7 @@ def add_ai_output(comment):
     if "ai_output" not in comment:
         comment["ai_output"] = classify_comment(comment)
 
-
+# Rendering Page
 def render_label_page(comments, position, error=None, status=200):
     """Render a label page after generating its live AI output."""
     add_ai_output(comments[position])
@@ -119,7 +120,7 @@ def render_label_page(comments, position, error=None, status=200):
         error=error,
     ), status
 
-
+# Database Initialization
 def initialize_database():
     """Create required tables and import the provided Reddit-comment dataset."""
     with open(COMMENTS_PATH, encoding="utf-8") as file:
@@ -135,12 +136,12 @@ def initialize_database():
                 label INTEGER NOT NULL
             );
         """)
-        connection.execute(
-            "ALTER TABLE comments ADD COLUMN IF NOT EXISTS parent_comment TEXT"
-        )
-        connection.execute(
-            "ALTER TABLE comments ADD COLUMN IF NOT EXISTS subreddit TEXT"
-        )
+        # connection.execute(
+        #     "ALTER TABLE comments ADD COLUMN IF NOT EXISTS parent_comment TEXT"
+        # )
+        # connection.execute(
+        #     "ALTER TABLE comments ADD COLUMN IF NOT EXISTS subreddit TEXT"
+        # )
         connection.execute("""
             CREATE TABLE IF NOT EXISTS submissions (
                 id SERIAL PRIMARY KEY,
@@ -154,18 +155,18 @@ def initialize_database():
                 born_in_us BOOLEAN NOT NULL
             );
         """)
-        connection.execute(
-            "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS parent_comment TEXT"
-        )
-        connection.execute(
-            "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS subreddit TEXT"
-        )
-        connection.execute(
-            "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS dataset_label INTEGER"
-        )
-        connection.execute(
-            "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS born_in_us BOOLEAN"
-        )
+        # connection.execute(
+        #     "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS parent_comment TEXT"
+        # )
+        # connection.execute(
+        #     "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS subreddit TEXT"
+        # )
+        # connection.execute(
+        #     "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS dataset_label INTEGER"
+        # )
+        # connection.execute(
+        #     "ALTER TABLE submissions ADD COLUMN IF NOT EXISTS born_in_us BOOLEAN"
+        # )
         connection.execute("""
             UPDATE submissions AS submission
             SET
@@ -210,7 +211,7 @@ def initialize_database():
 def home():
     return render_template("home.html")
 
-
+# Start Screen of the Task
 @app.post("/start")
 def start_task():
     participant_id = request.form.get("participant_id", "").strip()
@@ -265,7 +266,7 @@ def start_task():
 def instructions():
     return render_template("instructions.html")
 
-
+# Attention Task
 @app.route("/check", methods=["GET", "POST"])
 def check():
     if not session.get("comments"):
@@ -298,7 +299,7 @@ def check():
         selected_answers=selected_answers,
     )
 
-
+# Same from Assignment 2
 @app.route("/label", methods=["GET", "POST"])
 def label_comment():
     comments = session.get("comments")
