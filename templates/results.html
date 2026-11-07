@@ -1,9 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<main class="page">
+<main class="page results-page">
   <p class="title">Collected data</p>
   <div class="table-wrap">
-    <table>
+    <table class="results-table">
+      <colgroup>
+        <col style="width: 10%">
+        <col style="width: 12%">
+        <col style="width: 8%">
+        <col style="width: 9%">
+        <col style="width: 20%">
+        <col style="width: 20%">
+        <col style="width: 10%">
+        <col style="width: 11%">
+      </colgroup>
       <thead>
         <tr>
           <th>Participant</th>
@@ -19,14 +29,14 @@
       <tbody>
         {% for submission in submissions %}
         <tr>
-          <td>{{ submission.participant_id }}</td>
-          <td>{% if submission.native is none %}Not recorded{% elif submission.native %}Yes{% else %}No{% endif %}</td>
-          <td>{{ submission.reddit_id }}</td>
-          <td>/{{ submission.subreddit }}</td>
-          <td>{{ submission.parent_comment }}</td>
-          <td>{{ submission.comment_text }}</td>
-          <td>{{ labels[submission.dataset_label] }}</td>
-          <td>{{ labels[submission.selected_label] }}</td>
+          <td data-label="Participant">{{ submission.participant_id }}</td>
+          <td data-label="Raised in US and native English speaker">{% if submission.native is none %}Not recorded{% elif submission.native %}Yes{% else %}No{% endif %}</td>
+          <td data-label="Reddit ID">{{ submission.reddit_id }}</td>
+          <td data-label="Subreddit">/{{ submission.subreddit }}</td>
+          <td data-label="Parent comment">{{ submission.parent_comment }}</td>
+          <td data-label="Comment">{{ submission.comment_text }}</td>
+          <td data-label="Dataset label">{{ labels[submission.dataset_label] }}</td>
+          <td data-label="Participant label">{{ labels[submission.selected_label] }}</td>
         </tr>
         {% else %}
         <tr><td colspan="8">No submissions recorded yet.</td></tr>

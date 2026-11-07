@@ -63,10 +63,34 @@ legend { margin-bottom: 14px; font-size: .95rem; font-weight: 700; }
 table { width: 100%; border-collapse: collapse; }
 th, td { border-bottom: 1px solid #2c5578; padding: 14px; text-align: left; vertical-align: top; }
 th { background: #123a5c; font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; }
-td:nth-child(2) { min-width: 280px; line-height: 1.45; }
-.table-wrap { overflow-x: auto; }
+.results-page { width: calc(100% - 32px); }
+.results-table { table-layout: fixed; }
+.results-table th, .results-table td { overflow-wrap: anywhere; line-height: 1.45; }
+
+@media (max-width: 800px) {
+  .results-table, .results-table tbody, .results-table tr, .results-table td { display: block; }
+  .results-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .results-table tr + tr { border-top: 2px solid var(--border); }
+  .results-table td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 4px;
+    font-size: .76rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+}
 
 @media (max-width: 560px) {
   .page { width: min(100% - 24px, 760px); padding: 40px 0; }
+  .results-page { width: calc(100% - 24px); }
   .panel { padding: 22px; }
 }
